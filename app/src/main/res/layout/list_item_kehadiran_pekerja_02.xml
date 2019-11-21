@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/kehadiranPekerja_txtNamaPekerja"
+        android:text="Nama Pekerja"
+        android:textStyle="bold"
+        android:textSize="8pt"
+        android:textColor="@color/colorPrimaryDark"
+        android:layout_marginLeft="20px"
+        android:layout_marginTop="15px"></TextView>
+
+    <TableLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:stretchColumns="1"
+        android:layout_marginLeft="20px"
+        android:layout_marginBottom="20px">
+
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/colorZebra"
+            android:paddingLeft="20px"
+            android:paddingTop="10px"
+            android:paddingBottom="10px">
+
+            <TextView
+                android:layout_width="180px"
+                android:layout_height="wrap_content"
+                android:text="Status"
+                android:textStyle="bold"></TextView>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/kehadiranPekerja_txtJenisKehadiran"
+                android:text="Hadirkan kesenangan"></TextView>
+
+        </TableRow>
+
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingLeft="20px"
+            android:paddingTop="10px"
+            android:paddingBottom="10px">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Jam"
+                android:textStyle="bold"></TextView>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/kehadiranPekerja_txtWaktuKehadiran"
+                android:text="Hadirkan kesenangan"></TextView>
+
+        </TableRow>
+
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/colorZebra"
+            android:paddingLeft="20px"
+            android:paddingTop="10px"
+            android:paddingBottom="10px">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Keterangan"
+                android:textStyle="bold"></TextView>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/kehadiranPekerja_txtKeterangan"
+                android:text="Hadirkan kesenangan"></TextView>
+
+        </TableRow>
+
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingLeft="20px"
+            android:paddingTop="10px"
+            android:paddingBottom="10px">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Upload"
+                android:textStyle="bold"></TextView>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/kehadiranPekerja_txtStatusUpload"
+                android:text="Hadirkan kesenangan"
+                android:textColor="#966227"></TextView>
+
+        </TableRow>
+
+    </TableLayout>
+
+
+</LinearLayout>

@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    package="com.ptpn.panen">
+
+    <uses-permission android:name="android.permission.CAMERA" />
+    <uses-permission android:name="android.permission.INTERNET" />
+
+    <application
+        android:allowBackup="true"
+        android:hardwareAccelerated="true"
+        android:icon="@mipmap/ic_launcher"
+        android:label="@string/app_name"
+        android:roundIcon="@mipmap/ic_launcher_round"
+        android:supportsRtl="true"
+        android:theme="@style/AppTheme">
+        <activity android:name=".UploadTripActivity"></activity>
+        <activity android:name=".UploadPanenActivity" />
+        <activity android:name=".UploadKehadiranActivity" />
+        <activity android:name=".EditTripActivity" />
+        <activity android:name=".ProsesTripActivity" />
+        <activity android:name=".TripActivity" />
+        <activity android:name=".MandorPanel" />
+        <activity android:name=".ProsesPanenActivity" />
+        <activity android:name=".PanenActivity" />
+        <activity android:name=".KcsPanel" />
+        <activity android:name=".TidakHadirActivity" />
+        <activity
+            android:name=".DetailKehadiranActivity"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".KehadiranActivity"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".LoginActivity"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".ManagePersonalActivity"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".MainActivity"
+            android:theme="@style/AppTheme.NoActionBar">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+    </application>
+
+</manifest>

@@ -1,0 +1,26 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_height="match_parent"
+    android:layout_width="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical">
+
+    <include layout="@layout/toolbar_001" android:id="@+id/toolbar" />
+
+    <TextView
+        android:id="@+id/txtInfoKcs"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Lorem ipsum dolor sit amet"
+        android:paddingVertical="10px"
+        android:paddingHorizontal="20px"
+        android:textSize="7pt"
+        android:textColor="#FFFFFF"
+        android:background="@color/colorPrimary"
+        android:textStyle="bold"></TextView>
+
+    <ListView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/lvwDaftarPanen"></ListView>
+
+</LinearLayout>

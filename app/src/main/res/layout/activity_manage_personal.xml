@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_height="match_parent"
+    android:layout_width="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical">
+
+    <include layout="@layout/toolbar_001" android:id="@+id/toolbar" />
+
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:orientation="vertical"
+        android:background="@color/colorPrimary">
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Kelola data pekerja berupa pemanen, mandor, dan KCS untuk pengoperasian didalam aplikasi"
+            android:paddingVertical="10px"
+            android:paddingHorizontal="20px"
+            android:textSize="7pt"
+            android:textColor="#FFFFFF"></TextView>
+        <TextView
+            android:id="@+id/managePersonal_txtKeteranganAfdeling"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Saat ini anda sedang mengelola : "
+            android:paddingVertical="10px"
+            android:paddingHorizontal="20px"
+            android:textSize="7pt"
+            android:textColor="#FFFFFF"
+            android:textStyle="bold"></TextView>
+    </LinearLayout>
+
+    <ProgressBar
+        android:id="@+id/progressBarPekerja"
+        style="?android:attr/progressBarStyle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:indeterminate="true"
+        android:visibility="invisible" />
+
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:orientation="horizontal">
+
+        <ImageView
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:id="@+id/managePersonal_imgInfoPekerja"
+            android:scaleType="fitCenter"
+            android:src="@drawable/ic_warning_001"></ImageView>
+
+        <TextView
+            android:id="@+id/managePersonal_txtInfoPekerja"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Saat ini anda sedang mengelola : "
+            android:paddingVertical="10px"
+            android:paddingHorizontal="20px"
+            android:textSize="7pt"></TextView>
+
+    </LinearLayout>
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/managePersonal_btnSimpanPembaharuan"
+        android:text="Simpan pembaharuan"
+        android:layout_marginTop="50px"
+        android:layout_marginLeft="50px"
+        android:background="@color/colorPrimary"
+        android:textColor="#FFFFFF"
+        android:paddingVertical="20px"
+        android:paddingHorizontal="30px"
+        android:enabled="true"></Button>
+
+</LinearLayout>

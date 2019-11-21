@@ -1,0 +1,67 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_height="match_parent"
+    android:layout_width="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical">
+
+    <include layout="@layout/toolbar_001" android:id="@+id/toolbar" />
+
+    <TextView
+        android:id="@+id/txtInfoMandor"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Lorem ipsum dolor sit amet"
+        android:paddingVertical="10px"
+        android:paddingHorizontal="20px"
+        android:textSize="7pt"
+        android:textColor="#FFFFFF"
+        android:background="@color/colorPrimary"
+        android:textStyle="bold"></TextView>
+
+    <SearchView
+        android:id="@+id/srcTanggal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:inputType="date"
+        android:backgroundTint="#FFFFFF"
+        android:queryHint="Format : 2000-12-31"></SearchView>
+
+    <TextView
+        android:id="@+id/txtJumlahData"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="30px"
+        android:layout_marginRight="30px"
+        android:layout_marginTop="30px"
+        android:textSize="15dp"
+        android:text="Jumlah data. Ditemukan / Diupload : "
+        android:visibility="invisible"></TextView>
+
+    <Button
+        android:id="@+id/btnProses"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="30px"
+        android:layout_marginTop="30px"
+        android:layout_marginRight="30px"
+        android:background="@color/colorPrimary"
+        android:enabled="true"
+        android:paddingHorizontal="5dp"
+        android:paddingVertical="5dp"
+        android:text="Proses upload data"
+        android:textColor="#FFFFFF"
+        android:visibility="invisible"/>
+
+    <ProgressBar
+        android:id="@+id/progressBarProses"
+        style="?android:attr/progressBarStyle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="30px"
+        android:layout_marginTop="30px"
+        android:layout_marginRight="30px"
+        android:layout_gravity="left"
+        android:indeterminate="true"
+        android:visibility="invisible" />
+
+</LinearLayout>

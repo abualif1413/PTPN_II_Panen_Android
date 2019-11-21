@@ -1,0 +1,215 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/trip_txtNoSptbs"
+        android:text="No. SPTBS"
+        android:textStyle="bold"
+        android:textSize="8pt"
+        android:textColor="@color/colorPrimaryDark"
+        android:layout_marginLeft="20px"
+        android:layout_marginTop="15px"></TextView>
+
+    <TableLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="15px"
+        android:layout_marginLeft="20px">
+
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/colorZebra"
+            android:paddingLeft="20px"
+            android:paddingTop="10px"
+            android:paddingBottom="10px">
+
+            <TextView
+                android:layout_width="45dp"
+                android:layout_height="wrap_content"
+                android:text="No 1."
+                android:textSize="7pt"
+                android:textStyle="bold"></TextView>
+
+            <TextView
+                android:layout_width="60px"
+                android:layout_height="wrap_content"
+                android:text="Blok"
+                android:textSize="7pt"
+                android:textStyle="bold"></TextView>
+
+            <TextView
+                android:id="@+id/trip_txtBlok1"
+                android:layout_width="90dp"
+                android:layout_height="wrap_content"
+                android:text="- Blok1 -"
+                android:textSize="7pt"></TextView>
+
+            <TextView
+                android:layout_width="70px"
+                android:layout_height="wrap_content"
+                android:text="Jjg"
+                android:textSize="7pt"
+                android:textStyle="bold"></TextView>
+
+            <TextView
+                android:id="@+id/trip_txtJanjang1"
+                android:layout_width="100px"
+                android:layout_height="wrap_content"
+                android:text="- Jjg1 -"
+                android:textSize="7pt"></TextView>
+
+            <TextView
+                android:layout_width="70px"
+                android:layout_height="wrap_content"
+                android:text="Brd"
+                android:textSize="7pt"
+                android:textStyle="bold"></TextView>
+
+            <TextView
+                android:id="@+id/trip_txtBrondolan1"
+                android:layout_width="100px"
+                android:layout_height="wrap_content"
+                android:text="- Jjg1 -"
+                android:textSize="7pt"></TextView>
+
+        </TableRow>
+
+
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingLeft="20px"
+            android:paddingTop="10px"
+            android:paddingBottom="10px">
+
+            <TextView
+                android:layout_height="wrap_content"
+                android:text="No 2."
+                android:textSize="7pt"
+                android:textStyle="bold"></TextView>
+
+            <TextView
+                android:layout_height="wrap_content"
+                android:text="Blok"
+                android:textSize="7pt"
+                android:textStyle="bold"></TextView>
+
+            <TextView
+                android:id="@+id/trip_txtBlok2"
+                android:layout_height="wrap_content"
+                android:text="- Blok1 -"
+                android:textSize="7pt"></TextView>
+
+            <TextView
+                android:layout_height="wrap_content"
+                android:text="Jjg"
+                android:textSize="7pt"
+                android:textStyle="bold"></TextView>
+
+            <TextView
+                android:id="@+id/trip_txtJanjang2"
+                android:layout_height="wrap_content"
+                android:text="- Jjg1 -"
+                android:textSize="7pt"></TextView>
+
+            <TextView
+                android:layout_height="wrap_content"
+                android:text="Brd"
+                android:textSize="7pt"
+                android:textStyle="bold"></TextView>
+
+            <TextView
+                android:id="@+id/trip_txtBrondolan2"
+                android:layout_height="wrap_content"
+                android:text="- Jjg1 -"
+                android:textSize="7pt"></TextView>
+
+        </TableRow>
+
+
+
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/colorZebra"
+            android:paddingLeft="20px"
+            android:paddingTop="10px"
+            android:paddingBottom="10px">
+
+            <TextView
+                android:layout_height="wrap_content"
+                android:text="No 3."
+                android:textSize="7pt"
+                android:textStyle="bold"></TextView>
+
+            <TextView
+                android:layout_height="wrap_content"
+                android:text="Blok"
+                android:textSize="7pt"
+                android:textStyle="bold"></TextView>
+
+            <TextView
+                android:id="@+id/trip_txtBlok3"
+                android:layout_height="wrap_content"
+                android:text="- Blok1 -"
+                android:textSize="7pt"></TextView>
+
+            <TextView
+                android:layout_height="wrap_content"
+                android:text="Jjg"
+                android:textSize="7pt"
+                android:textStyle="bold"></TextView>
+
+            <TextView
+                android:id="@+id/trip_txtJanjang3"
+                android:layout_height="wrap_content"
+                android:text="- Jjg1 -"
+                android:textSize="7pt"></TextView>
+
+            <TextView
+                android:layout_height="wrap_content"
+                android:text="Brd"
+                android:textSize="7pt"
+                android:textStyle="bold"></TextView>
+
+            <TextView
+                android:id="@+id/trip_txtBrondolan3"
+                android:layout_height="wrap_content"
+                android:text="- Jjg1 -"
+                android:textSize="7pt"></TextView>
+
+        </TableRow>
+
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingLeft="20px"
+            android:paddingTop="10px"
+            android:paddingBottom="10px">
+
+            <TextView
+                android:layout_height="wrap_content"
+                android:text="Upload"
+                android:textSize="7pt"
+                android:textStyle="bold"
+                android:layout_span="2"></TextView>
+
+            <TextView
+                android:id="@+id/trip_txtStatusUpload"
+                android:layout_height="wrap_content"
+                android:text="Blok"
+                android:textSize="7pt"
+                android:textStyle="bold"
+                android:layout_span="5"
+                android:textColor="#966227"></TextView>
+
+        </TableRow>
+
+    </TableLayout>
+
+</LinearLayout>
