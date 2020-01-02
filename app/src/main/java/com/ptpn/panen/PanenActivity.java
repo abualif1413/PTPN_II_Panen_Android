@@ -76,6 +76,11 @@ public class PanenActivity extends AppCompatActivity {
                     Intent intent = new Intent(PanenActivity.this, ProsesPanenActivity.class);
                     intent.putExtra("barcode", pemanen.getBarcode());
                     startActivity(intent);
+                } else {
+                    String id_panen = panen.getId_panen();
+                    Intent intent = new Intent(PanenActivity.this, EditPanenActivity.class);
+                    intent.putExtra("id_panen", id_panen);
+                    startActivity(intent);
                 }
             }
         });

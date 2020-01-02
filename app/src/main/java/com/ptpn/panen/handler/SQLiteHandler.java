@@ -1055,6 +1055,45 @@ public class SQLiteHandler extends SQLiteOpenHelper {
         db.execSQL(SQL);
     }
 
+    public Panen getPanen(String id_panen) {
+        Panen panen = new Panen();
+        final String SQL = "SELECT id, " +
+                "id_kerani_askep, id_kerani_kcs, id_kebun,\n" +
+                "id_afdeling, id_pemanen, tph,\n" +
+                "blok, jmlh_panen, jmlh_brondolan,\n" +
+                "id_alat, tanggal, status,\n" +
+                "approve, kode, creat_att " +
+                "FROM tbl_panen " +
+                "WHERE id='" + id_panen + "'";
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor cursor = db.rawQuery(SQL,null);
+
+        if (cursor.moveToFirst()) {
+            do {
+                Panen temp = new Panen();
+                temp.setId(cursor.getInt(0));
+                temp.setId_kerani_askep(cursor.getInt(1));
+                temp.setId_kerani_kcs(cursor.getString(2));
+                temp.setId_kebun(cursor.getInt(3));
+                temp.setId_afdeling(cursor.getInt(4));
+                temp.setId_pemanen(cursor.getInt(5));
+                temp.setTph(cursor.getInt(6));
+                temp.setBlok(cursor.getInt(7));
+                temp.setJmlh_panen(cursor.getString(8));
+                temp.setJmlh_brondolan(cursor.getString(9));
+                temp.setId_alat(cursor.getInt(10));
+                temp.setTanggal(cursor.getString(11));
+                temp.setStatus(cursor.getString(12));
+                temp.setApprove(cursor.getString(13));
+                temp.setKode(cursor.getString(14));
+                temp.setCreat_att(cursor.getString(15));
+                panen = temp;
+            } while (cursor.moveToNext());
+        }
+
+        return panen;
+    }
+
     public int generateNoSptbs(String tanggal) {
         int noSptbs = 0;
 
