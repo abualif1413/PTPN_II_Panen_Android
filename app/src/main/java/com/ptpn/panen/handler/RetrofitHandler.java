@@ -4,7 +4,7 @@ import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
 public class RetrofitHandler {
-    public static final String BASE_URL = "https://ptpn2.asikinonlineaja.com/";
+    public static final String BASE_URL = "https://ptpn2.kreasidigital.co/";
     //public static final String BASE_URL = "http://172.16.1.116/ptpn/";
 
 //    https://ptpn2.asikinonlineaja.com/api/kebun
