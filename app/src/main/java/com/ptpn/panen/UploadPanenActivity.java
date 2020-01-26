@@ -67,13 +67,17 @@ public class UploadPanenActivity extends AppCompatActivity {
             public boolean onQueryTextSubmit(String query) {
                 String tglCari = srcTanggal.getQuery().toString();
                 srcTanggal.clearFocus();
-                panenList = sqLiteHandler.getPanenTable(tglCari);
+                panenList = sqLiteHandler.getPanenTable(tglCari, Integer.parseInt(keraniKcs.getId()));
                 if(panenList.size() == 0) {
                     Toast.makeText(getApplicationContext(), "Tidak ada data panen pada tanggal yang dicari", Toast.LENGTH_SHORT).show();
                 } else {
                     counter = 0;
                     txtJumlahData.setText("Data ditemukan / diupload : " + panenList.size() + " / " + counter);
                     txtJumlahData.setVisibility(View.VISIBLE);
+                    Gson gson = new Gson();
+                    String uji = gson.toJson(panenList);
+                    Log.d("Panen020_data", uji);
+
                     btnProses.setVisibility(View.VISIBLE);
                 }
 
@@ -92,29 +96,15 @@ public class UploadPanenActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 progressBarProses.setVisibility(View.VISIBLE);
-                for (final Panen panen : panenList) {
-                    KeraniKcs kkcs = sqLiteHandler.getKeraniKcs(Integer.parseInt(panen.getId_kerani_kcs()));
-                    RetrofitApiInterface retrofitApiInterfaceAlatPanen = RetrofitHandler.getRetrofit().create(RetrofitApiInterface.class);
-                    Call<JsonPostUmum> jsonPostUmumCall = retrofitApiInterfaceAlatPanen.getPostPanen(
-                            panen.getId_kerani_askep() + "",
-                            kkcs.getToken() + "",
-                            panen.getId_kebun() + "",
-                            panen.getId_afdeling() + "",
-                            panen.getId_pemanen() + "",
-                            panen.getTph() + "",
-                            panen.getBlok() + "",
-                            panen.getJmlh_panen() + "",
-                            panen.getJmlh_brondolan() + "",
-                            panen.getId_alat() + "",
-                            panen.getTanggal() + "",
-                            "N",
-                            "N",
-                            "N",
-                            "ANDROID");
-                    jsonPostUmumCall.enqueue(new Callback<JsonPostUmum>() {
-                        @Override
-                        public void onResponse(Call<JsonPostUmum> call, Response<JsonPostUmum> response) {
-                            JsonPostUmum res = response.body();
+                Gson gson = new Gson();
+                String data = gson.toJson(panenList);
+                RetrofitApiInterface retrofitApiInterfaceAlatPanen = RetrofitHandler.getRetrofit().create(RetrofitApiInterface.class);
+                Call<JsonPostUmum> jsonPostUmumCall = retrofitApiInterfaceAlatPanen.getPostPanen020(data);
+                jsonPostUmumCall.enqueue(new Callback<JsonPostUmum>() {
+                    @Override
+                    public void onResponse(Call<JsonPostUmum> call, Response<JsonPostUmum> response) {
+                        JsonPostUmum res = response.body();
+                        for (Panen panen : panenList) {
                             counter++;
                             sqLiteHandler.pushStatusUploadPanen(panen.getId_pemanen() + "", panen.getTanggal(), "Telah upload");
                             txtJumlahData.setText("Data ditemukan / diupload : " + panenList.size() + " / " + counter);
@@ -124,14 +114,14 @@ public class UploadPanenActivity extends AppCompatActivity {
                                 counter = 0;
                             }
                         }
+                    }
 
-                        @Override
-                        public void onFailure(Call<JsonPostUmum> call, Throwable t) {
-                            progressBarProses.setVisibility(View.INVISIBLE);
-                            Toast.makeText(getApplicationContext(), "Tidak bisa terhubung ke API " + t.getMessage(),Toast.LENGTH_LONG).show();
-                        }
-                    });
-                }
+                    @Override
+                    public void onFailure(Call<JsonPostUmum> call, Throwable t) {
+                        progressBarProses.setVisibility(View.INVISIBLE);
+                        Toast.makeText(getApplicationContext(), "Tidak bisa terhubung ke API " + t.getMessage(),Toast.LENGTH_LONG).show();
+                    }
+                });
             }
         });
     }

@@ -179,6 +179,8 @@ public class EditPanenActivity extends AppCompatActivity {
             if(bluetoothAdapter.isEnabled()){
                 Intent enableBT = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
                 startActivityForResult(enableBT,0);
+            } else {
+                Toast.makeText(getApplicationContext(), "Hidupkan perangkat bluetooth dan sambungkan dengan printer", Toast.LENGTH_SHORT).show();
             }
 
             Set<BluetoothDevice> pairedDevice = bluetoothAdapter.getBondedDevices();
@@ -276,14 +278,16 @@ public class EditPanenActivity extends AppCompatActivity {
             String jamSekarang = new java.text.SimpleDateFormat(
                     "HH:mm:ss").format(calendar.getTime());
             String waktuPanen = dataPanen.getTanggal() + " " + jamSekarang;
-            String msg = "- BUKTI PANEN -\n" +
+            String msg = "\n\n" + dataKebun.getNamaKebun() + " - " + dataKebun.getNamaAfdeling() + "\n" +
+                    "- TANDA TERIMA PANEN TBS -\n" +
                     "======================\n" +
-                    "Tgl\t\t: " + AppCommon.ubahFormatTanggal(waktuPanen, FORMAT_TANGGAL.INDONESIA_KOMPLIT_TANPA_DETIK) + "\n" +
-                    "Nama\t\t: " + ygPanen.getNamaPemanen() + "\n" +
+                    "Tgl\t\t: " + AppCommon.ubahFormatTanggal(waktuPanen, FORMAT_TANGGAL.INDONESIA_HANYA_TANGGAL) + "\n" +
+                    "Pemanen\t\t: " + ygPanen.getNamaPemanen() + "\n" +
                     "KCS\t\t: " + keraniKcs.getNamaLengkap() + "\n" +
                     "Jjg\t\t: " + dataPanen.getJmlh_panen() + "\n" +
                     "Brd\t\t: " + dataPanen.getJmlh_brondolan() + "\n" +
-                    "Blok\t\t: " + namaBlok + "\n" +
+                    "Blok\t\t: " + namaBlok + "\n\n" +
+                    "HARAP SIMPAN STRUK INI SEBAGAI BUKTI SERAH TERIMA PANEN\n" +
                     "======================\n";
 
             msg+="\n\n";

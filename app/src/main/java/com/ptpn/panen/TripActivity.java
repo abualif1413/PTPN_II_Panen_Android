@@ -11,6 +11,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
+import android.widget.SimpleAdapter;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -26,6 +27,7 @@ import com.ptpn.panen.entity.ListViewAdapterTrip;
 import com.ptpn.panen.handler.SQLiteHandler;
 
 import java.util.Calendar;
+import java.util.HashMap;
 import java.util.List;
 
 public class TripActivity extends AppCompatActivity {
@@ -38,6 +40,8 @@ public class TripActivity extends AppCompatActivity {
     String tglSekarang;
 
     List<ListViewAdapterTrip> trips;
+
+    List<HashMap<String, String>> listDetail;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -67,21 +71,23 @@ public class TripActivity extends AppCompatActivity {
         lvwDaftarTrip.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Intent intent = new Intent(TripActivity.this, EditTripActivity.class);
-                intent.putExtra("id_trip", trips.get(position).getId() + "");
+                Intent intent = new Intent(TripActivity.this, EditTrip020Activity.class);
+                intent.putExtra("id_trip", listDetail.get(position).get("id"));
                 startActivity(intent);
             }
         });
     }
 
     private void loadTrip() {
-        trips = sqLiteHandler.getListTrip(AppCommon.ubahFormatTanggal(tglSekarang, FORMAT_TANGGAL.MYSQL_HANYA_TANGGAL));
+        /*trips = sqLiteHandler.getListTrip(AppCommon.ubahFormatTanggal(tglSekarang, FORMAT_TANGGAL.MYSQL_HANYA_TANGGAL));
 
         if(trips.size() > 0) {
             AdapterTrip adapterTrip = new AdapterTrip(this, trips);
             lvwDaftarTrip.setAdapter(adapterTrip);
-        }
-
+        }*/
+        listDetail = sqLiteHandler.listTrip020(AppCommon.ubahFormatTanggal(tglSekarang, FORMAT_TANGGAL.MYSQL_HANYA_TANGGAL));
+        SimpleAdapter adapter = new SimpleAdapter(this, listDetail, R.layout.list_item_001, new String[] {"main", "sub"}, new int[] {R.id.listItem001MainText, R.id.listItem001SubText});
+        lvwDaftarTrip.setAdapter(adapter);
     }
 
     @Override
@@ -95,7 +101,7 @@ public class TripActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         switch (item.getItemId()) {
             case R.id.item005TambahPanen :
-                Intent intent = new Intent(TripActivity.this, ProsesTripActivity.class);
+                Intent intent = new Intent(TripActivity.this, ProsesTrip020Activity.class);
                 startActivity(intent);
                 break;
         }

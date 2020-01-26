@@ -7,131 +7,145 @@
 
     <include layout="@layout/toolbar_001" android:id="@+id/toolbar" />
 
-    <TableLayout
+    <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:stretchColumns="1"
-        android:paddingHorizontal="20px"
-        android:paddingBottom="20px"
-        android:background="@color/colorPrimary">
+        android:layout_height="match_parent">
 
-        <TableRow
+        <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+            android:layout_height="match_parent"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            xmlns:app="http://schemas.android.com/apk/res-auto"
+            android:orientation="vertical">
 
-            <TextView
+            <TableLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Nama"
-                android:textColor="#FFFFFF"
-                android:textSize="8pt"
-                android:paddingRight="30px"></TextView>
+                android:stretchColumns="1"
+                android:paddingHorizontal="20px"
+                android:paddingBottom="20px"
+                android:background="@color/colorPrimary">
+
+                <TableRow
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Nama"
+                        android:textColor="#FFFFFF"
+                        android:textSize="8pt"
+                        android:paddingRight="30px"></TextView>
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/detailKehadiran_tvNamaPemanen"
+                        android:text="- Nama Pemanen -"
+                        android:textColor="#FFFFFF"
+                        android:textSize="8pt"
+                        android:textStyle="bold">
+
+                    </TextView>
+
+                </TableRow>
+
+                <TableRow
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Kode Absen"
+                        android:textColor="#FFFFFF"
+                        android:textSize="8pt"
+                        android:paddingRight="30px"></TextView>
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/detailKehadiran_tvQRCode"
+                        android:text="- Nama Pemanen -"
+                        android:textColor="#FFFFFF"
+                        android:textSize="8pt"
+                        android:textStyle="bold">
+
+                    </TextView>
+
+                </TableRow>
+
+                <TableRow
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Tanggal"
+                        android:textColor="#FFFFFF"
+                        android:textSize="8pt"
+                        android:paddingRight="30px"></TextView>
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/detailKehadiran_tvUntukTanggal"
+                        android:text="- Nama Pemanen -"
+                        android:textColor="#FFFFFF"
+                        android:textSize="8pt"
+                        android:textStyle="bold">
+
+                    </TextView>
+
+                </TableRow>
+
+            </TableLayout>
 
             <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Isi Keterangan Ijin"
+                android:textColor="@color/colorPrimaryDark"
+                android:textSize="15pt"
+                android:textStyle="bold"
+                android:paddingHorizontal="50px"
+                android:paddingTop="50px"></TextView>
+
+            <Spinner
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:id="@+id/detailKehadiran_tvNamaPemanen"
-                android:text="- Nama Pemanen -"
-                android:textColor="#FFFFFF"
-                android:textSize="8pt"
-                android:textStyle="bold">
+                android:id="@+id/listJenisIjin"
+                android:entries="@array/jenis_ijin_lengkap"
+                android:layout_marginHorizontal="50px"
+                android:layout_marginTop="80px">
+            </Spinner>
 
-            </TextView>
-
-        </TableRow>
-
-        <TableRow
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-
-            <TextView
+            <EditText
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Kode Absen"
-                android:textColor="#FFFFFF"
-                android:textSize="8pt"
-                android:paddingRight="30px"></TextView>
+                android:id="@+id/txtKeteranganIjin"
+                android:layout_marginHorizontal="50px"
+                android:layout_marginTop="30px"
+                android:hint="Keterangan"
+                android:backgroundTint="@color/colorPrimary" ></EditText>
 
-            <TextView
-                android:layout_width="match_parent"
+            <Button
+                android:id="@+id/btnSimpanIjin"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:id="@+id/detailKehadiran_tvQRCode"
-                android:text="- Nama Pemanen -"
+                android:layout_marginLeft="50px"
+                android:layout_marginRight="50px"
+                android:layout_marginTop="100px"
+                android:enabled="true"
+                android:text="Simpan data ijin"
+                android:background="@color/colorPrimary"
                 android:textColor="#FFFFFF"
-                android:textSize="8pt"
-                android:textStyle="bold">
+                android:paddingVertical="20px"
+                android:paddingHorizontal="70px"></Button>
 
-            </TextView>
+        </LinearLayout>
 
-        </TableRow>
-
-        <TableRow
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Tanggal"
-                android:textColor="#FFFFFF"
-                android:textSize="8pt"
-                android:paddingRight="30px"></TextView>
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:id="@+id/detailKehadiran_tvUntukTanggal"
-                android:text="- Nama Pemanen -"
-                android:textColor="#FFFFFF"
-                android:textSize="8pt"
-                android:textStyle="bold">
-
-            </TextView>
-
-        </TableRow>
-
-    </TableLayout>
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Isi Keterangan Ijin"
-        android:textColor="@color/colorPrimaryDark"
-        android:textSize="15pt"
-        android:textStyle="bold"
-        android:paddingHorizontal="50px"
-        android:paddingTop="50px"></TextView>
-
-    <Spinner
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/listJenisIjin"
-        android:entries="@array/jenis_ijin_lengkap"
-        android:layout_marginHorizontal="50px"
-        android:layout_marginTop="80px">
-    </Spinner>
-
-    <EditText
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/txtKeteranganIjin"
-        android:layout_marginHorizontal="50px"
-        android:layout_marginTop="30px"
-        android:hint="Keterangan"
-        android:backgroundTint="@color/colorPrimary" ></EditText>
-
-    <Button
-        android:id="@+id/btnSimpanIjin"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="50px"
-        android:layout_marginRight="50px"
-        android:layout_marginTop="100px"
-        android:enabled="true"
-        android:text="Simpan data ijin"
-        android:background="@color/colorPrimary"
-        android:textColor="#FFFFFF"
-        android:paddingVertical="20px"
-        android:paddingHorizontal="70px"></Button>
+    </ScrollView>
 
 </LinearLayout>

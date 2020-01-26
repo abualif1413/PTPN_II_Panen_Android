@@ -7,6 +7,7 @@ import androidx.appcompat.widget.Toolbar;
 import android.app.Application;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -38,6 +39,10 @@ public class LoginActivity extends AppCompatActivity {
         sqLiteHandler = new SQLiteHandler(this);
 
         ListViewAdapterKebunAfdeling dataKebun = sqLiteHandler.getAfdelingPreference();
+        if(dataKebun.getNamaKebun() == null) {
+            Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+            startActivity(intent);
+        }
         toolbar.setTitle("Login");
         setSupportActionBar(toolbar);
 

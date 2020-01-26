@@ -5,6 +5,7 @@ import androidx.appcompat.widget.Toolbar;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ProgressBar;
@@ -12,10 +13,12 @@ import android.widget.SearchView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.gson.Gson;
 import com.ptpn.panen.entity.JsonPostUmum;
 import com.ptpn.panen.entity.KeraniKcs;
 import com.ptpn.panen.entity.ListViewAdapterKebunAfdeling;
 import com.ptpn.panen.entity.Trip;
+import com.ptpn.panen.entity.Trip020;
 import com.ptpn.panen.handler.RetrofitApiInterface;
 import com.ptpn.panen.handler.RetrofitHandler;
 import com.ptpn.panen.handler.SQLiteHandler;
@@ -34,6 +37,7 @@ public class UploadTripActivity extends AppCompatActivity {
     ListViewAdapterKebunAfdeling dataKebun;
     SearchView srcTanggal;
     List<Trip> tripList;
+    List<Trip020> trip020List;
     Button btnProses;
     ProgressBar progressBarProses;
     int counter;
@@ -64,14 +68,19 @@ public class UploadTripActivity extends AppCompatActivity {
             public boolean onQueryTextSubmit(String query) {
                 String tglCari = srcTanggal.getQuery().toString();
                 srcTanggal.clearFocus();
-                tripList = sqLiteHandler.getTripTable(tglCari);
-                if(tripList.size() == 0) {
+                trip020List = sqLiteHandler.getTrip020Table(tglCari);
+                if(trip020List.size() == 0) {
                     Toast.makeText(getApplicationContext(), "Tidak ada data trip pada tanggal yang dicari", Toast.LENGTH_SHORT).show();
                 } else {
                     counter = 0;
-                    txtJumlahData.setText("Data ditemukan / diupload : " + tripList.size() + " / " + counter);
+                    txtJumlahData.setText("Data ditemukan / diupload : " + trip020List.size() + " / " + counter);
                     txtJumlahData.setVisibility(View.VISIBLE);
                     btnProses.setVisibility(View.VISIBLE);
+
+                    Gson gson = new Gson();
+                    String datanya = gson.toJson(trip020List);
+
+                    Log.d("Trip020_data", datanya);
                 }
 
                 return true;
@@ -88,46 +97,20 @@ public class UploadTripActivity extends AppCompatActivity {
         btnProses.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                Gson gson = new Gson();
                 progressBarProses.setVisibility(View.VISIBLE);
-                for (final Trip trip : tripList) {
-                    /*
-                    @Field("no_sptbs"),
-                    @Field("id_kerani_askep"),
-                    @Field("id_kerani_kcs"),
-                    @Field("id_kebun"),
-                    @Field("id_afdeling"),
-                    @Field("id_blok_1"),
-                    @Field("id_blok_2"),
-                    @Field("id_blok_3"),
-                    @Field("jumlah_janjang_1"),
-                    @Field("jumlah_janjang_2"),
-                    @Field("jumlah_janjang_3"),
-                    @Field("jumlah_brondolan_1"),
-                    @Field("jumlah_brondolan_2"),
-                    @Field("jumlah_brondolan_3"),
-                    @Field("nomor_polisi_trek"),
-                    @Field("tanggal"),
-                    @Field("status"),
-                    @Field("device")
-                    * */
-                    KeraniKcs objKeraniKcs = sqLiteHandler.getKeraniKcs(Integer.parseInt(trip.getId_kerani_kcs()));
-                    RetrofitApiInterface retrofitApiInterfaceAlatPanen = RetrofitHandler.getRetrofit().create(RetrofitApiInterface.class);
-                    Call<JsonPostUmum> jsonPostUmumCall = retrofitApiInterfaceAlatPanen.getPostTrip(
-                            trip.getSptbs(), (objKeraniKcs.getIdKeraniAskep() + ""), (objKeraniKcs.getToken() + ""), (dataKebun.getIdKebun() + ""), (trip.getId_afdeling() + ""),
-                            (trip.getId_blok_1() + ""), (trip.getId_blok_2() + ""), (trip.getId_blok_3() + ""),
-                            (trip.getJumlah_janjang_1() + ""), (trip.getJumlah_janjang_2() + ""), (trip.getJumlah_janjang_3() + ""),
-                            (trip.getJumlah_brondolan_1() + ""), (trip.getJumlah_brondolan_2() + ""), (trip.getJumlah_brondolan_3() + ""),
-                            trip.getNomor_polisi_trek(), trip.getTanggal(), "N", "ANDROID"
-                    );
-
-                    final Trip tripToUpload = trip;
+                for (final Trip020 trip : trip020List) {
+                    String data = gson.toJson(trip);
+                    RetrofitApiInterface retrofitApiInt = RetrofitHandler.getRetrofit().create(RetrofitApiInterface.class);
+                    Call<JsonPostUmum> jsonPostUmumCall = retrofitApiInt.getPostTrip020(data);
                     jsonPostUmumCall.enqueue(new Callback<JsonPostUmum>() {
                         @Override
                         public void onResponse(Call<JsonPostUmum> call, Response<JsonPostUmum> response) {
+                            JsonPostUmum res = response.body();
                             counter++;
-                            txtJumlahData.setText("Data ditemukan / diupload : " + tripList.size() + " / " + counter);
-                            sqLiteHandler.pushStatusUploadTrip(tripToUpload.getSptbs(), tripToUpload.getTanggal(), "Telah diupload");
-                            if(counter == tripList.size()) {
+                            sqLiteHandler.pushStatusUploadTrip(trip.getSptbs() + "", trip.getTanggal(), "Telah upload");
+                            txtJumlahData.setText("Data ditemukan / diupload : " + trip020List.size() + " / " + counter);
+                            if(counter == trip020List.size()) {
                                 progressBarProses.setVisibility(View.INVISIBLE);
                                 Toast.makeText(getApplicationContext(), "Data trip telah selesai diupload", Toast.LENGTH_LONG).show();
                                 counter = 0;

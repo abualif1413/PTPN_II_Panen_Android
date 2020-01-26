@@ -13,6 +13,7 @@
 
     <string-array name="jenis_ijin">
         <item></item>
+        <item>H</item>
         <item>s</item>
         <item>c</item>
         <item>p1</item>
@@ -25,6 +26,7 @@
 
     <string-array name="jenis_ijin_lengkap">
         <item>- Pilih Jenis Ijin -</item>
+        <item>Hadir</item>
         <item>Sakit</item>
         <item>Cuti</item>
         <item>Ijin (P1)</item>

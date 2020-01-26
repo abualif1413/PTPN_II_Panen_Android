@@ -70,10 +70,10 @@ public class PanenActivity extends AppCompatActivity {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 ListViewAdapterPanen panen = panens.get(position);
-                if(panen.getId_panen().equals("0")) {
+                /*if(panen.getId_panen().equals("0")) {
                     String id_pemanen = panen.getId_pemanen();
                     Pemanen pemanen = sqLiteHandler.getPemanen(Integer.parseInt(id_pemanen));
-                    Intent intent = new Intent(PanenActivity.this, ProsesPanenActivity.class);
+                    Intent intent = new Intent(PanenActivity.this, ProsesPanen020Activity.class);
                     intent.putExtra("barcode", pemanen.getBarcode());
                     startActivity(intent);
                 } else {
@@ -81,7 +81,12 @@ public class PanenActivity extends AppCompatActivity {
                     Intent intent = new Intent(PanenActivity.this, EditPanenActivity.class);
                     intent.putExtra("id_panen", id_panen);
                     startActivity(intent);
-                }
+                }*/
+                String id_pemanen = panen.getId_pemanen();
+                Pemanen pemanen = sqLiteHandler.getPemanen(Integer.parseInt(id_pemanen));
+                Intent intent = new Intent(PanenActivity.this, ProsesPanen020Activity.class);
+                intent.putExtra("barcode", pemanen.getBarcode());
+                startActivity(intent);
             }
         });
     }

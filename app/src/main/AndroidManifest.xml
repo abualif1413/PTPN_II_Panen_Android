@@ -15,7 +15,10 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".EditPanenActivity"></activity>
+        <activity android:name=".ProsesPanen020Activity"></activity>
+        <activity android:name=".EditTrip020Activity" />
+        <activity android:name=".ProsesTrip020Activity" />
+        <activity android:name=".EditPanenActivity" />
         <activity android:name=".UploadTripActivity" />
         <activity android:name=".UploadPanenActivity" />
         <activity android:name=".UploadKehadiranActivity" />
@@ -35,18 +38,19 @@
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".LoginActivity"
-            android:theme="@style/AppTheme.NoActionBar" />
-        <activity
-            android:name=".ManagePersonalActivity"
-            android:theme="@style/AppTheme.NoActionBar" />
-        <activity
-            android:name=".MainActivity"
             android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+        </activity>
+        <activity
+            android:name=".ManagePersonalActivity"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".MainActivity"
+            android:theme="@style/AppTheme.NoActionBar">
         </activity>
     </application>
 

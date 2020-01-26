@@ -11,6 +11,7 @@ import com.ptpn.panen.entity.Afdeling;
 import com.ptpn.panen.entity.AlatPanen;
 import com.ptpn.panen.entity.AppPreferenceConstant;
 import com.ptpn.panen.entity.Blok;
+import com.ptpn.panen.entity.BlokAdaPanenBelumDiantar;
 import com.ptpn.panen.entity.Distrik;
 import com.ptpn.panen.entity.Kebun;
 import com.ptpn.panen.entity.KeraniKcs;
@@ -22,6 +23,8 @@ import com.ptpn.panen.entity.ListViewAdapterKebunAfdeling;
 import com.ptpn.panen.entity.Pemanen;
 import com.ptpn.panen.entity.Absen;
 import com.ptpn.panen.entity.Trip;
+import com.ptpn.panen.entity.Trip020;
+import com.ptpn.panen.entity.Trip020Detail;
 
 import java.lang.reflect.Array;
 import java.util.ArrayList;
@@ -32,7 +35,7 @@ import java.util.List;
 public class SQLiteHandler extends SQLiteOpenHelper {
 
     public static String DATABASE_NAME = "ptpn2.db";
-    private static final int DATABASE_VERSION = 5;
+    private static final int DATABASE_VERSION = 7;
 
     public SQLiteHandler(Context context){
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
@@ -149,7 +152,7 @@ public class SQLiteHandler extends SQLiteOpenHelper {
                     "id  INTEGER PRIMARY KEY NOT NULL,\n" +
                     "id_kebun  INTEGER NOT NULL,\n" +
                     "id_afdeling  INTEGER NOT NULL,\n" +
-                    "blok  INTEGER NOT NULL,\n" +
+                    "blok TEXT NOT NULL,\n" +
                     "bt  INTEGER NOT NULL,\n" +
                     "p0  INTEGER NOT NULL,\n" +
                     "p1  INTEGER NOT NULL,\n" +
@@ -213,6 +216,26 @@ public class SQLiteHandler extends SQLiteOpenHelper {
                     "\ttgl_upload TEXT NOT NULL\n" +
                     ")";
 
+            final String SQL_CREATE_TRIP_020_DETAIL = "CREATE TABLE tbl_trip_020_detail (\n" +
+                    "id INTEGER PRIMARY KEY NOT NULL,\n" +
+                    "id_trip INTEGER,\n" +
+                    "id_blok INTEGER\n," +
+                    "jumlah_janjang INTEGER\n," +
+                    "jumlah_restan INTEGER\n" +
+                    ")";
+
+            final String SQL_CREATE_TRIP_020 = "CREATE TABLE tbl_trip_020 (\n" +
+                    "id INTEGER PRIMARY KEY NOT NULL,\n" +
+                    "sptbs TEXT,\n" +
+                    "id_kerani_askep INTEGER,\n" +
+                    "id_kerani_kcs INTEGER,\n" +
+                    "id_kebun INTEGER,\n" +
+                    "id_afdeling INTEGER,\n" +
+                    "jumlah_brondolan INTEGER,\n" +
+                    "nomor_polisi_trek TEXT,\n" +
+                    "tanggal TEXT\n" +
+                    ")";
+
             db.execSQL(SQL_CREATE_TBL_KEBUN);
             db.execSQL(SQL_CREATE_TBL_AFDELING);
             db.execSQL(SQL_CREATE_DISTRIK);
@@ -230,6 +253,8 @@ public class SQLiteHandler extends SQLiteOpenHelper {
             db.execSQL(SQL_UPLOAD_INFO_ABSEN);
             db.execSQL(SQL_UPLOAD_INFO_TRIP);
             db.execSQL(SQL_UPLOAD_INFO_PANEN);
+            db.execSQL(SQL_CREATE_TRIP_020_DETAIL);
+            db.execSQL(SQL_CREATE_TRIP_020);
             //db.close();
         } catch (Exception ex){
             ex.printStackTrace();
@@ -255,6 +280,8 @@ public class SQLiteHandler extends SQLiteOpenHelper {
             db.execSQL("DROP TABLE IF EXISTS tbl_upload_info_absen");
             db.execSQL("DROP TABLE IF EXISTS tbl_upload_info_trip");
             db.execSQL("DROP TABLE IF EXISTS tbl_upload_info_panen");
+            db.execSQL("DROP TABLE IF EXISTS tbl_trip_020_detail");
+            db.execSQL("DROP TABLE IF EXISTS tbl_trip_020");
             onCreate(db);
         } catch (Exception ex) {
             ex.printStackTrace();
@@ -903,7 +930,7 @@ public class SQLiteHandler extends SQLiteOpenHelper {
                 "WHERE\n" +
                 "	pemanen.id_afdeling = '" + id_afdeling + "'\n" +
                 "ORDER BY\n" +
-                "	pemanen.nama_pemanen ASC";
+                "	pemanen.nama_pemanen ASC, panen.id ASC";
 
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor cursor = db.rawQuery(SQL,null);
@@ -925,6 +952,61 @@ public class SQLiteHandler extends SQLiteOpenHelper {
         }
 
         return listViewAdapterPanens;
+    }
+
+    public List<ListViewAdapterPanen> getDataPanenHarianPerOrang(String tanggal, int idPemanen) {
+        List<ListViewAdapterPanen> listViewAdapterPanens = new ArrayList<ListViewAdapterPanen>();
+
+        ListViewAdapterKebunAfdeling dataAfdeling = getAfdelingPreference();
+        int id_afdeling = dataAfdeling.getId();
+
+        final String SQL = "SELECT\n" +
+                "	pemanen.id AS id_pemanen, coalesce(panen.id, 0) AS id_panen,\n" +
+                "	pemanen.nama_pemanen,\n" +
+                "	coalesce(panen.tph, '') AS tph,\n" +
+                "	coalesce(blok.blok, '') AS blok,\n" +
+                "	coalesce(panen.jmlh_panen, '') AS janjang,\n" +
+                "	coalesce(panen.jmlh_brondolan, '') AS brondolan,\n" +
+                "	coalesce(alat.nama_alat, '') AS id_alat,\n" +
+                "   coalesce(blok.tahun_tanam, '') AS tahun_tanam,\n" +
+                "   upl.response " +
+                "FROM\n" +
+                "	tbl_pemanen pemanen\n" +
+                "	INNER JOIN tbl_panen panen ON pemanen.id = panen.id_pemanen AND panen.tanggal = '" + tanggal + "'\n" +
+                "	LEFT JOIN tbl_blok blok ON panen.blok = blok.id\n" +
+                "   LEFT JOIN tbl_alat alat ON panen.id_alat = alat.id\n" +
+                "   LEFT JOIN tbl_upload_info_panen upl ON panen.id_pemanen = upl.id_pemanen AND panen.tanggal = upl.tanggal " +
+                "WHERE\n" +
+                "	pemanen.id = '" + idPemanen + "'\n" +
+                "ORDER BY\n" +
+                "	pemanen.nama_pemanen ASC, panen.id ASC";
+
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor cursor = db.rawQuery(SQL,null);
+
+        if (cursor.moveToFirst()) {
+            do {
+                ListViewAdapterPanen temp = new ListViewAdapterPanen();
+                temp.setId_pemanen(cursor.getString(0));
+                temp.setId_panen(cursor.getString(1));
+                temp.setNama_pemanen(cursor.getString(2));
+                temp.setTph(cursor.getString(3));
+                temp.setBlok(cursor.getString(4) + " (TT : " + cursor.getString(8) + ")");
+                temp.setJanjang(cursor.getString(5));
+                temp.setBrondolan(cursor.getString(6));
+                temp.setId_alat(cursor.getString(7));
+                temp.setStatusUpload(cursor.getString(9));
+                listViewAdapterPanens.add(temp);
+            } while (cursor.moveToNext());
+        }
+
+        return listViewAdapterPanens;
+    }
+
+    public void deletePanen(int idPanen) {
+        final String hapus = "DELETE FROM tbl_panen WHERE id='" + idPanen + "'";
+        SQLiteDatabase db = this.getReadableDatabase();
+        db.execSQL(hapus);
     }
 
     public void truncateBlok() {
@@ -1013,6 +1095,60 @@ public class SQLiteHandler extends SQLiteOpenHelper {
         return bloks;
     }
 
+    public List<BlokAdaPanenBelumDiantar> getListBlokAdaPanenBelumDiantar(String tanggal) {
+        List<BlokAdaPanenBelumDiantar> bloks = new ArrayList<BlokAdaPanenBelumDiantar>();
+
+        ListViewAdapterKebunAfdeling dataAfdeling = getAfdelingPreference();
+        int id_afdeling = dataAfdeling.getId();
+
+        final String SQL = "select " +
+                "blk.id, blk.id_kebun, blk.id_afdeling,\n" +
+                "blk.blok, blk.bt, blk.p0,\n" +
+                "blk.p1, blk.p2, blk.p3,\n" +
+                "blk.rp_p0, blk.rp_p1, blk.rp_p2,\n" +
+                "blk.rp_p3, blk.tahun_tanam, blk.prediksi_komidel,\n" +
+                "blk.status, blk.keterangan, sum(panen.jmlh_panen) AS jmlh_panen " +
+                "from " +
+                "tbl_blok blk " +
+                "inner join tbl_panen panen on blk.id = panen.blok " +
+                "where " +
+                "blk.id_afdeling = '" + id_afdeling + "' and lower(blk.keterangan) = 'all' " +
+                "group by " +
+                "blk.id " +
+                "order by blk.blok asc";
+
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor cursor = db.rawQuery(SQL,null);
+
+        if (cursor.moveToFirst()) {
+            do {
+                BlokAdaPanenBelumDiantar blok = new BlokAdaPanenBelumDiantar();
+                blok.setId(cursor.getString(0));
+                blok.setIdKebun(cursor.getString(1));
+                blok.setIdAfdeling(cursor.getString(2));
+                blok.setBlok(cursor.getString(3));
+                blok.setBt(cursor.getString(4));
+                blok.setP0(cursor.getString(5));
+                blok.setP1(cursor.getString(6));
+                blok.setP2(cursor.getString(7));
+                blok.setP3(cursor.getString(8));
+                blok.setRpP0(cursor.getString(9));
+                blok.setRpP1(cursor.getString(10));
+                blok.setRpP2(cursor.getString(11));
+                blok.setRpP3(cursor.getString(12));
+                blok.setTahunTanam(cursor.getString(13));
+                blok.setPrediksiKomidel(cursor.getString(14));
+                blok.setStatus(cursor.getString(15));
+                blok.setKeterangan(cursor.getString(16));
+                blok.setJmlh_janjang(cursor.getDouble(17));
+                bloks.add(blok);
+
+            } while (cursor.moveToNext());
+        }
+
+        return bloks;
+    }
+
     public List<AlatPanen> getListAlatPanen() {
         List<AlatPanen> alatPanens = new ArrayList<AlatPanen>();
 
@@ -1034,7 +1170,7 @@ public class SQLiteHandler extends SQLiteOpenHelper {
     }
 
     public void insertPanen(Panen panen) {
-        final String hapus = "DELETE FROM tbl_panen WHERE id_pemanen='" + panen.getId_pemanen() + "' AND tanggal='" + panen.getTanggal() + "'";
+        final String hapus = "DELETE FROM tbl_panen WHERE id_pemanen='" + panen.getId_pemanen() + "' AND blok='" + panen.getBlok() + "' AND tanggal='" + panen.getTanggal() + "'";
 
         final String SQL = "INSERT INTO tbl_panen (\n" +
                 "\tid_kerani_askep, id_kerani_kcs, id_kebun,\n" +
@@ -1303,7 +1439,7 @@ public class SQLiteHandler extends SQLiteOpenHelper {
         return absens;
     }
 
-    public List<Panen> getPanenTable(String tanggal) {
+    public List<Panen> getPanenTable(String tanggal, int idKeraniKcs) {
         List<Panen> panens = new ArrayList<Panen>();
 
         final String SQL = "SELECT id, " +
@@ -1313,7 +1449,7 @@ public class SQLiteHandler extends SQLiteOpenHelper {
                 "id_alat, tanggal, status,\n" +
                 "approve, kode, creat_att " +
                 "FROM tbl_panen " +
-                "WHERE tanggal='" + tanggal + "'";
+                "WHERE tanggal='" + tanggal + "' AND id_kerani_kcs='" + idKeraniKcs + "'";
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor cursor = db.rawQuery(SQL,null);
 
@@ -1430,5 +1566,213 @@ public class SQLiteHandler extends SQLiteOpenHelper {
         String sql_simpan = "INSERT INTO tbl_upload_info_trip(no_sptbs, tanggal, response, tgl_upload) " +
                 "VALUES('" + no_sptbs + "', '" + tanggal + "', '" + response + "', '" + tglSekarang + "')";
         db.execSQL(sql_simpan);
+    }
+
+    public void insertTrip020Detail(int id_trip, int id_blok, int jlh_janjang, int restan_awal) {
+        String sql = "INSERT INTO tbl_trip_020_detail(id_trip, id_blok, jumlah_janjang, jumlah_restan) " +
+                "VALUES('" + id_trip + "', '" + id_blok + "', '" + jlh_janjang + "', '" + restan_awal + "')";
+
+        SQLiteDatabase db = this.getReadableDatabase();
+        db.execSQL(sql);
+    } public void deleteTrip020Detail(int id) {
+        String sql = "DELETE FROM tbl_trip_020_detail WHERE id='" + id + "'";
+
+        SQLiteDatabase db = this.getReadableDatabase();
+        db.execSQL(sql);
+    }
+
+    public List<HashMap<String, String>> listTrip020Detail(int id_trip) {
+        List<HashMap<String, String>> kembali = new ArrayList<>();
+
+        String SQL = "SELECT " +
+                "trip.id, blok.blok, blok.tahun_tanam, trip.jumlah_janjang, jumlah_restan " +
+                "FROM tbl_trip_020_detail trip " +
+                "LEFT JOIN tbl_blok blok ON trip.id_blok = blok.id " +
+                "WHERE trip.id_trip = '" + id_trip + "'";
+
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor cursor = db.rawQuery(SQL,null);
+
+        if (cursor.moveToFirst()) {
+            do {
+                Log.d("trip_020_detail", "Blok " + cursor.getString(1) + " -  Thn. Tanam " + cursor.getString(2));
+                HashMap<String, String> temp = new HashMap<>();
+                temp.put("main", "Blok " + cursor.getString(1) + " -  Thn. Tanam " + cursor.getString(2));
+                temp.put("sub", "Jlh Janjang = " + cursor.getString(3) + "\nRestan Awal = " + cursor.getString(4));
+                temp.put("id", cursor.getString(0));
+                kembali.add(temp);
+            } while (cursor.moveToNext());
+        }
+
+        return kembali;
+    }
+
+    public void insertTrip020(String noSptbs, String noPolisi, int jlhBrondolan) {
+        SQLiteDatabase db = this.getReadableDatabase();
+
+        KeraniKcs keraniKcs;
+        ListViewAdapterKebunAfdeling dataKebun;
+
+        keraniKcs = getDataKeraniKcsAsPreference();
+        dataKebun = getAfdelingPreference();
+
+        Calendar calendar = Calendar.getInstance();
+        String tglSekarang = new java.text.SimpleDateFormat(
+                "yyyy-MM-dd").format(calendar.getTime());
+
+        String sql = "INSERT INTO tbl_trip_020(" +
+                "sptbs,\n" +
+                "id_kerani_askep,\n" +
+                "id_kerani_kcs,\n" +
+                "id_kebun,\n" +
+                "id_afdeling,\n" +
+                "jumlah_brondolan,\n" +
+                "nomor_polisi_trek,\n" +
+                "tanggal" +
+                ") VALUES (" +
+                "'" + noSptbs + "', " +
+                "'" + keraniKcs.getIdKeraniAskep() + "', " +
+                "'" + keraniKcs.getId() + "', " +
+                "'" + dataKebun.getIdKebun() + "', " +
+                "'" + dataKebun.getId() + "', " +
+                "'" + jlhBrondolan + "', " +
+                "'" + noPolisi + "', " +
+                "'" + tglSekarang + "'" +
+                ") ";
+
+        db.execSQL(sql);
+
+        String sql_data_terakhir = "SELECT id FROM tbl_trip_020 ORDER BY id DESC LIMIT 1";
+        Cursor cursor = db.rawQuery(sql_data_terakhir,null);
+        int id_trip = 0;
+        if (cursor.moveToFirst()) {
+            do {
+                id_trip = cursor.getInt(0);
+                Log.d("trip_020", id_trip + "");
+            } while (cursor.moveToNext());
+        }
+
+        String update = "UPDATE tbl_trip_020_detail SET id_trip='" + id_trip + "' WHERE id_trip='0'";
+        db.execSQL(update);
+    }
+
+    public void deleteTrip020(int id) {
+        String sql_head = "DELETE FROM tbl_trip_020 WHERE id='" + id + "'";
+        String sql_detail = "DELETE FROM tbl_trip_020_detail WHERE id_trip='" + id + "'";
+        SQLiteDatabase db = this.getReadableDatabase();
+        db.execSQL(sql_head);
+        db.execSQL(sql_detail);
+    }
+
+    public HashMap<String, String> ambilTrip020(int id) {
+        HashMap<String, String> kembali = new HashMap<>();
+
+        String SQL = "SELECT " +
+                "trip.id, trip.sptbs, trip.nomor_polisi_trek, trip.jumlah_brondolan " +
+                "FROM " +
+                "tbl_trip_020 trip " +
+                "WHERE trip.id='" + id + "'";
+
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor cursor = db.rawQuery(SQL,null);
+
+        if (cursor.moveToFirst()) {
+            do {
+                kembali.put("sptbs", cursor.getString(1));
+                kembali.put("no_polisi", cursor.getString(2));
+                kembali.put("jlh_brondolan", cursor.getString(3));
+            } while (cursor.moveToNext());
+        }
+
+        return kembali;
+    }
+
+    public List<HashMap<String, String>> listTrip020(String tanggal) {
+        List<HashMap<String, String>> kembali = new ArrayList<>();
+        String SQL = "SELECT " +
+                "trip.id, trip.sptbs, trip.nomor_polisi_trek, trip.jumlah_brondolan " +
+                "FROM " +
+                "tbl_trip_020 trip " +
+                "WHERE trip.tanggal='" + tanggal + "'";
+
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor cursor = db.rawQuery(SQL,null);
+
+        if (cursor.moveToFirst()) {
+            do {
+                Log.d("trip_020", "SPTBS : " + cursor.getString(1) + " -  No. Polisi : " + cursor.getString(2) + " - Jlh Brondolan : " + cursor.getString(3));
+                HashMap<String, String> temp = new HashMap<>();
+                temp.put("main", "SPTBS : " + cursor.getString(1) + " -  No. Polisi : " + cursor.getString(2) + " - Jlh Brondolan : " + cursor.getString(3));
+                temp.put("sub", "Ketuk untuk melihat rincian");
+                temp.put("id", cursor.getString(0));
+                kembali.add(temp);
+            } while (cursor.moveToNext());
+        }
+
+        return kembali;
+    }
+
+    public List<Trip020> getTrip020Table(String tanggal) {
+        List<Trip020> trip020s = new ArrayList<>();
+        SQLiteDatabase db = this.getReadableDatabase();
+
+        String SQL = "SELECT " +
+                "id, " +
+                "sptbs,\n" +
+                "id_kerani_askep,\n" +
+                "id_kerani_kcs,\n" +
+                "id_kebun,\n" +
+                "id_afdeling,\n" +
+                "jumlah_brondolan,\n" +
+                "nomor_polisi_trek,\n" +
+                "tanggal " +
+                "FROM " +
+                "tbl_trip_020 trip " +
+                "WHERE trip.tanggal='" + tanggal + "'";
+
+        Cursor cursor = db.rawQuery(SQL,null);
+
+        if (cursor.moveToFirst()) {
+            do {
+                Trip020 temp = new Trip020();
+                temp.setId(cursor.getInt(0));
+                temp.setSptbs(cursor.getString(1));
+                temp.setId_kerani_askep(cursor.getInt(2));
+                temp.setId_kerani_kcs(cursor.getInt(3));
+                temp.setId_kebun(cursor.getInt(4));
+                temp.setId_afdeling(cursor.getInt(5));
+                temp.setJumlah_brondolan(cursor.getDouble(6));
+                temp.setNomor_polisi_trek(cursor.getString(7));
+                temp.setTanggal(cursor.getString(8));
+
+
+                String SQL_DETAIL = "SELECT " +
+                        "trip.id, trip.id_trip, trip.id_blok, trip.jumlah_janjang, trip.jumlah_restan " +
+                        "FROM tbl_trip_020_detail trip " +
+                        "WHERE trip.id_trip = '" + cursor.getInt(0) + "'";
+
+                Cursor cursor_detail = db.rawQuery(SQL_DETAIL,null);
+
+                List<Trip020Detail> trip020Details = new ArrayList<>();
+                if (cursor_detail.moveToFirst()) {
+                    do {
+                        Trip020Detail tempdetail = new Trip020Detail();
+                        tempdetail.setId(cursor_detail.getInt(0));
+                        tempdetail.setId_trip(cursor_detail.getInt(1));
+                        tempdetail.setId_blok(cursor_detail.getInt(2));
+                        tempdetail.setJumlah_janjang(cursor_detail.getDouble(3));
+                        tempdetail.setJumlah_restan(cursor_detail.getDouble(4));
+
+                        trip020Details.add(tempdetail);
+                    } while (cursor_detail.moveToNext());
+                }
+
+                temp.setDetails(trip020Details);
+
+                trip020s.add(temp);
+            } while (cursor.moveToNext());
+        }
+
+        return trip020s;
     }
 }
