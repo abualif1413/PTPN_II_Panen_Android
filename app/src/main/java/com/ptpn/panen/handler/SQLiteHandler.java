@@ -9,10 +9,12 @@ import android.util.Log;
 import com.ptpn.panen.Panen;
 import com.ptpn.panen.entity.Afdeling;
 import com.ptpn.panen.entity.AlatPanen;
+import com.ptpn.panen.entity.AppCommon;
 import com.ptpn.panen.entity.AppPreferenceConstant;
 import com.ptpn.panen.entity.Blok;
 import com.ptpn.panen.entity.BlokAdaPanenBelumDiantar;
 import com.ptpn.panen.entity.Distrik;
+import com.ptpn.panen.entity.FORMAT_TANGGAL;
 import com.ptpn.panen.entity.Kebun;
 import com.ptpn.panen.entity.KeraniKcs;
 import com.ptpn.panen.entity.ListViewAdapterKehadiranPekerja;
@@ -35,7 +37,7 @@ import java.util.List;
 public class SQLiteHandler extends SQLiteOpenHelper {
 
     public static String DATABASE_NAME = "ptpn2.db";
-    private static final int DATABASE_VERSION = 7;
+    private static final int DATABASE_VERSION = 8;
 
     public SQLiteHandler(Context context){
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
@@ -221,7 +223,8 @@ public class SQLiteHandler extends SQLiteOpenHelper {
                     "id_trip INTEGER,\n" +
                     "id_blok INTEGER\n," +
                     "jumlah_janjang INTEGER\n," +
-                    "jumlah_restan INTEGER\n" +
+                    "jumlah_restan INTEGER,\n" +
+                    "tgl_restan TEXT\n" +
                     ")";
 
             final String SQL_CREATE_TRIP_020 = "CREATE TABLE tbl_trip_020 (\n" +
@@ -1107,12 +1110,24 @@ public class SQLiteHandler extends SQLiteOpenHelper {
                 "blk.p1, blk.p2, blk.p3,\n" +
                 "blk.rp_p0, blk.rp_p1, blk.rp_p2,\n" +
                 "blk.rp_p3, blk.tahun_tanam, blk.prediksi_komidel,\n" +
-                "blk.status, blk.keterangan, sum(panen.jmlh_panen) AS jmlh_panen " +
+                "blk.status, blk.keterangan, (sum(panen.jmlh_panen) - coalesce(max(sudah.jjg), 0)) AS jmlh_panen " +
                 "from " +
                 "tbl_blok blk " +
                 "inner join tbl_panen panen on blk.id = panen.blok " +
+                "left join ( " +
+                    "SELECT\n" +
+                    "\ttripdet.id_blok, SUM(tripdet.jumlah_janjang) AS jjg\n" +
+                    "FROM\n" +
+                    "\ttbl_trip_020 trip\n" +
+                    "\tINNER JOIN tbl_trip_020_detail tripdet ON trip.id = tripdet.id_trip\n" +
+                    "WHERE\n" +
+                    "\ttrip.tanggal = '" + tanggal + "'\n" +
+                    "GROUP BY\n" +
+                    "\ttripdet.id_blok " +
+                " ) sudah ON blk.id = sudah.id_blok " +
                 "where " +
                 "blk.id_afdeling = '" + id_afdeling + "' and lower(blk.keterangan) = 'all' " +
+                "and panen.tanggal = '" + tanggal + "' " +
                 "group by " +
                 "blk.id " +
                 "order by blk.blok asc";
@@ -1568,9 +1583,9 @@ public class SQLiteHandler extends SQLiteOpenHelper {
         db.execSQL(sql_simpan);
     }
 
-    public void insertTrip020Detail(int id_trip, int id_blok, int jlh_janjang, int restan_awal) {
-        String sql = "INSERT INTO tbl_trip_020_detail(id_trip, id_blok, jumlah_janjang, jumlah_restan) " +
-                "VALUES('" + id_trip + "', '" + id_blok + "', '" + jlh_janjang + "', '" + restan_awal + "')";
+    public void insertTrip020Detail(int id_trip, int id_blok, int jlh_janjang, int restan_awal, String tgl_restan) {
+        String sql = "INSERT INTO tbl_trip_020_detail(id_trip, id_blok, jumlah_janjang, jumlah_restan, tgl_restan) " +
+                "VALUES('" + id_trip + "', '" + id_blok + "', '" + jlh_janjang + "', '" + restan_awal + "', '" + tgl_restan + "')";
 
         SQLiteDatabase db = this.getReadableDatabase();
         db.execSQL(sql);
@@ -1585,7 +1600,7 @@ public class SQLiteHandler extends SQLiteOpenHelper {
         List<HashMap<String, String>> kembali = new ArrayList<>();
 
         String SQL = "SELECT " +
-                "trip.id, blok.blok, blok.tahun_tanam, trip.jumlah_janjang, jumlah_restan " +
+                "trip.id, blok.blok, blok.tahun_tanam, trip.jumlah_janjang, jumlah_restan, tgl_restan " +
                 "FROM tbl_trip_020_detail trip " +
                 "LEFT JOIN tbl_blok blok ON trip.id_blok = blok.id " +
                 "WHERE trip.id_trip = '" + id_trip + "'";
@@ -1595,10 +1610,11 @@ public class SQLiteHandler extends SQLiteOpenHelper {
 
         if (cursor.moveToFirst()) {
             do {
+                String tgl_restan = (cursor.getString(5).equals("") ? "- Tidak ada restan -" : AppCommon.ubahFormatTanggal(cursor.getString(5) + " 00:00:00", FORMAT_TANGGAL.INDONESIA_HANYA_TANGGAL));
                 Log.d("trip_020_detail", "Blok " + cursor.getString(1) + " -  Thn. Tanam " + cursor.getString(2));
                 HashMap<String, String> temp = new HashMap<>();
                 temp.put("main", "Blok " + cursor.getString(1) + " -  Thn. Tanam " + cursor.getString(2));
-                temp.put("sub", "Jlh Janjang = " + cursor.getString(3) + "\nRestan Awal = " + cursor.getString(4));
+                temp.put("sub", "Jlh Janjang Hari Ini = " + cursor.getString(3) + "\nJlh Janjang Restan Restan = " + cursor.getString(4) + "\nTgl Restan = " + tgl_restan);
                 temp.put("id", cursor.getString(0));
                 kembali.add(temp);
             } while (cursor.moveToNext());

@@ -149,6 +149,20 @@
                 android:scrollbarAlwaysDrawVerticalTrack="true"
                 android:layout_marginTop="20dp"></ListView>
 
+            <Button
+                android:id="@+id/btnCetakPanen"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="50px"
+                android:layout_marginRight="50px"
+                android:layout_marginTop="70px"
+                android:enabled="true"
+                android:text="Cetak data panen"
+                android:background="@color/colorPrimary"
+                android:textColor="#FFFFFF"
+                android:paddingVertical="20px"
+                android:paddingHorizontal="70px"></Button>
+
         </LinearLayout>
 
     </ScrollView>

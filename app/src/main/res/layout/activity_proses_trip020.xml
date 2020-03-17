@@ -70,7 +70,7 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Jlh. Janjang"></TextView>
+                    android:text="Jlh. Janjang Hari Ini"></TextView>
 
                 <EditText
                     android:id="@+id/txtJlhJanjang"
@@ -93,7 +93,7 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Restan Awal"></TextView>
+                    android:text="Restan"></TextView>
 
                 <EditText
                     android:id="@+id/txtRestanAwal"
@@ -101,6 +101,29 @@
                     android:layout_height="wrap_content"
                     android:backgroundTint="@color/colorPrimary"
                     android:inputType="number"
+                    android:selectAllOnFocus="true" />
+            </LinearLayout>
+
+            <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                xmlns:app="http://schemas.android.com/apk/res-auto"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="50px"
+                android:layout_marginTop="70px"
+                android:layout_marginRight="50px"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Tanggal Restan"></TextView>
+
+                <EditText
+                    android:id="@+id/txtTglRestan"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:backgroundTint="@color/colorPrimary"
+                    android:inputType="date"
                     android:selectAllOnFocus="true" />
             </LinearLayout>
 

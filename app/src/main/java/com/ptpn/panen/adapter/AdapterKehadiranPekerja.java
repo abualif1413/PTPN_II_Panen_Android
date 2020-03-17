@@ -79,9 +79,19 @@ public class AdapterKehadiranPekerja implements ListAdapter {
             txtStatusUpload.setText(objKehadiranPekerja.getStatusUpload());
             if(objKehadiranPekerja.getStatusKehadiran().equalsIgnoreCase("H")) {
                 txtNamaPekerja.setText(objKehadiranPekerja.getNamaPemanen());
-                txtJenisKehadiran.setText("Hadir");
+                txtJenisKehadiran.setText("Hadir (Panen)");
                 txtWaktuKehadiran.setText(AppCommon.ubahFormatTanggal(objKehadiranPekerja.getTanggal(), FORMAT_TANGGAL.INDONESIA_KOMPLIT_TANPA_DETIK));
-                txtKeterangan.setText("Hadir");
+                txtKeterangan.setText("Hadir (Panen)");
+
+                txtNamaPekerja.setTextColor(convertView.getResources().getColor(R.color.colorHadirPekerja));
+                txtJenisKehadiran.setTextColor(convertView.getResources().getColor(R.color.colorHadirPekerja));
+                txtWaktuKehadiran.setTextColor(convertView.getResources().getColor(R.color.colorHadirPekerja));
+                txtKeterangan.setTextColor(convertView.getResources().getColor(R.color.colorHadirPekerja));
+            } else if(objKehadiranPekerja.getStatusKehadiran().equalsIgnoreCase("HT")) {
+                txtNamaPekerja.setText(objKehadiranPekerja.getNamaPemanen());
+                txtJenisKehadiran.setText("Hadir (Tunasan)");
+                txtWaktuKehadiran.setText(AppCommon.ubahFormatTanggal(objKehadiranPekerja.getTanggal(), FORMAT_TANGGAL.INDONESIA_KOMPLIT_TANPA_DETIK));
+                txtKeterangan.setText("Hadir (Tunasan)");
 
                 txtNamaPekerja.setTextColor(convertView.getResources().getColor(R.color.colorHadirPekerja));
                 txtJenisKehadiran.setTextColor(convertView.getResources().getColor(R.color.colorHadirPekerja));

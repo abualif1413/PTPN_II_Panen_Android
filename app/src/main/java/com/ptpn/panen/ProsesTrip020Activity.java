@@ -11,6 +11,7 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ListAdapter;
 import android.widget.ListView;
@@ -18,6 +19,7 @@ import android.widget.SimpleAdapter;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.app.DatePickerDialog;
 
 import com.google.gson.Gson;
 import com.ptpn.panen.entity.Blok;
@@ -37,12 +39,14 @@ public class ProsesTrip020Activity extends AppCompatActivity {
     KeraniKcs keraniKcs;
     SQLiteHandler sqLiteHandler;
     ListViewAdapterKebunAfdeling dataKebun;
-    List<BlokAdaPanenBelumDiantar> blokList;
+    List<BlokAdaPanenBelumDiantar> blokListTemp;
+    List<Blok> blokList;
     List<String> stringBlokList;
-    EditText txtJlhJanjang, txtRestanAwal, txtJlhBrondolan, txtNoSPTBS, txtNoPolisi;
+    EditText txtJlhJanjang, txtRestanAwal, txtTglRestan, txtJlhBrondolan, txtNoSPTBS, txtNoPolisi;
     Spinner spinnerBlok;
     Button btnPush, btnSimpanSptbs;
     ListView lvwTripDetail;
+    DatePickerDialog datePickerDialog;
 
     String tglSekarang;
 
@@ -69,7 +73,7 @@ public class ProsesTrip020Activity extends AppCompatActivity {
         txtInfoKcs.setText(dataKebun.getNamaKebun() + " - " + dataKebun.getNamaAfdeling() + "\n" +"Kerani KCS : " + keraniKcs.getNamaLengkap() + "\n" + "Email : " + keraniKcs.getEmail() + "\n" +
                 "SIlahkan input data trip / pengangkutan disini");
 
-        blokList = sqLiteHandler.getListBlokAdaPanenBelumDiantar(tglSekarang);
+        blokList = sqLiteHandler.getListBlok();
         Gson gson = new Gson();
         String jsonuji = gson.toJson(blokList);
         Log.d("BlokAdaPanen", jsonuji);
@@ -86,7 +90,7 @@ public class ProsesTrip020Activity extends AppCompatActivity {
 
         spinnerBlok = findViewById(R.id.listBlok);
         spinnerBlok.setAdapter(dataAdapterBlok);
-        spinnerBlok.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+        /*spinnerBlok.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 if(position != 0) {
@@ -100,13 +104,29 @@ public class ProsesTrip020Activity extends AppCompatActivity {
             public void onNothingSelected(AdapterView<?> parent) {
                 txtJlhJanjang.setText("");
             }
-        });
+        });*/
 
         txtJlhJanjang = findViewById(R.id.txtJlhJanjang);
         txtRestanAwal = findViewById(R.id.txtRestanAwal);
+        txtTglRestan = findViewById(R.id.txtTglRestan);
         txtJlhBrondolan = findViewById(R.id.txtJlhBrondolan);
         txtNoSPTBS = findViewById(R.id.txtNoSPTBS);
         txtNoPolisi = findViewById(R.id.txtNoPolisi);
+
+        txtTglRestan.setFocusable(false);
+        txtTglRestan.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showCalendar();
+            }
+        });
+        txtTglRestan.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+                txtTglRestan.setText("");
+                return true;
+            }
+        });
 
         btnPush = findViewById(R.id.btnPush);
         btnPush.setOnClickListener(new View.OnClickListener() {
@@ -114,15 +134,50 @@ public class ProsesTrip020Activity extends AppCompatActivity {
             public void onClick(View v) {
                 String jlh_janjang = txtJlhJanjang.getText().toString() + "";
                 String restan_awal = txtRestanAwal.getText().toString() + "";
+                String tgl_restan = txtTglRestan.getText().toString() + "";
                 int positionBlok = spinnerBlok.getSelectedItemPosition();
                 String id_blok = (positionBlok == 0 ? "0" : blokList.get(positionBlok - 1).getId());
 
+
+
                 if(jlh_janjang.equals("") || restan_awal.equals("") || id_blok.equals("0")) {
-                    Toast.makeText(getApplicationContext(), "Harap isi semua input. Jika tidak ada restan, maka isi dengan 0", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getApplicationContext(), "Harap isi semua input. Jika tidak ada janjang hari ini atau restan, maka isi dengan 0", Toast.LENGTH_SHORT).show();
                 } else {
-                    sqLiteHandler.insertTrip020Detail(0, Integer.parseInt(id_blok), Integer.parseInt(jlh_janjang), Integer.parseInt(restan_awal));
-                    loadDetail();
-                    kosongDetail();
+                    if(!restan_awal.equals("0")) {
+                        // Berarti dia ada restan
+                        if(tgl_restan.equals("")) {
+                            Toast.makeText(getApplicationContext(), "Tgl restan harus diisi jika ada buah restan yang diangkut", Toast.LENGTH_SHORT).show();
+                        } else {
+                            // Validasi supaya dia tidak bisa input janjang lebih besar dari yg dia panen
+                            double dblJanjangInput = Double.parseDouble(jlh_janjang);
+                            double dblSeharusnya = 1E30;
+
+                            sqLiteHandler.insertTrip020Detail(0, Integer.parseInt(id_blok), Integer.parseInt(jlh_janjang), Integer.parseInt(restan_awal), txtTglRestan.getText().toString() + "");
+                            loadDetail();
+                            kosongDetail();
+                            blokList = sqLiteHandler.getListBlok();
+                            stringBlokList = new ArrayList<String>();
+                            stringBlokList.add("- Pilih Blok  -");
+                            for (Blok blk : blokList) {
+                                stringBlokList.add(blk.getBlok() + " - tahun tanam (" + blk.getTahunTanam() + ")");
+                            }
+                        }
+                    } else {
+                        // Berarti dia tidak ada restan
+                        // Validasi supaya dia tidak bisa input janjang lebih besar dari yg dia panen
+                        double dblJanjangInput = Double.parseDouble(jlh_janjang);
+                        double dblSeharusnya = 1E30;
+
+                        sqLiteHandler.insertTrip020Detail(0, Integer.parseInt(id_blok), Integer.parseInt(jlh_janjang), Integer.parseInt(restan_awal), txtTglRestan.getText().toString() + "");
+                        loadDetail();
+                        kosongDetail();
+                        blokList = sqLiteHandler.getListBlok();
+                        stringBlokList = new ArrayList<String>();
+                        stringBlokList.add("- Pilih Blok  -");
+                        for (Blok blk : blokList) {
+                            stringBlokList.add(blk.getBlok() + " - tahun tanam (" + blk.getTahunTanam() + ")");
+                        }
+                    }
                 }
             }
         });
@@ -138,12 +193,20 @@ public class ProsesTrip020Activity extends AppCompatActivity {
         });
 
         lvwTripDetail = findViewById(R.id.lvwTripDetail);
-        lvwTripDetail.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        lvwTripDetail.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
             @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+            public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
                 String id_detail = listDetail.get(position).get("id");
                 sqLiteHandler.deleteTrip020Detail(Integer.parseInt(id_detail));
                 loadDetail();
+                blokList = sqLiteHandler.getListBlok();
+                stringBlokList = new ArrayList<String>();
+                stringBlokList.add("- Pilih Blok  -");
+                for (Blok blk : blokList) {
+                    stringBlokList.add(blk.getBlok() + " - tahun tanam (" + blk.getTahunTanam() + ")");
+                }
+
+                return true;
             }
         });
         loadDetail();
@@ -153,6 +216,7 @@ public class ProsesTrip020Activity extends AppCompatActivity {
         spinnerBlok.setSelection(0);
         txtJlhJanjang.setText("");
         txtRestanAwal.setText("");
+        txtTglRestan.setText("");
     }
 
     void loadDetail() {
@@ -178,5 +242,24 @@ public class ProsesTrip020Activity extends AppCompatActivity {
         params.height = totalHeight + (lvwTripDetail.getDividerHeight() * (listAdapter.getCount() - 1));
         lvwTripDetail.setLayoutParams(params);
         lvwTripDetail.requestLayout();
+    }
+
+    private void showCalendar() {
+        //Toast.makeText(getApplicationContext(), "Kalender keluar", Toast.LENGTH_SHORT).show();
+        Calendar newCalendar = java.util.Calendar.getInstance();
+        datePickerDialog = new DatePickerDialog(this, new DatePickerDialog.OnDateSetListener() {
+            @Override
+            public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
+                Calendar newDate = Calendar.getInstance();
+                newDate.set(year, month, dayOfMonth);
+                txtTglRestan.setText(new java.text.SimpleDateFormat(
+                        "yyyy-MM-dd").format(newDate.getTime()));
+            }
+        }, newCalendar.get(Calendar.YEAR), newCalendar.get(Calendar.MONTH), newCalendar.get(Calendar.DAY_OF_MONTH));
+        datePickerDialog.show();
+    }
+
+    private void hideCalendar() {
+        Toast.makeText(getApplicationContext(), "Kalender hilang", Toast.LENGTH_SHORT).show();
     }
 }

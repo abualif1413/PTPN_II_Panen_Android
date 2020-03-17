@@ -25,7 +25,7 @@ import java.util.HashMap;
 public class LoginActivity extends AppCompatActivity {
 
     Button btnLogin;
-    TextView infoAfdeling;
+    TextView infoAfdeling, infoVersi;
     EditText username, password;
 
     SQLiteHandler sqLiteHandler;
@@ -50,9 +50,10 @@ public class LoginActivity extends AppCompatActivity {
         username = findViewById(R.id.username);
         password = findViewById(R.id.password);
         infoAfdeling = findViewById(R.id.txtInfoAfdeling);
+        infoVersi = findViewById(R.id.txtInfoVersi);
 
         infoAfdeling.setText("Kebun " + dataKebun.getNamaKebun() + " - " + dataKebun.getNamaAfdeling());
-
+        infoVersi.setText(R.string.apps_version);
 
 
         btnLogin.setOnClickListener(new View.OnClickListener() {

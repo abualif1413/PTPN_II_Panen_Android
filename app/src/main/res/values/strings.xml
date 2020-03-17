@@ -10,10 +10,12 @@
     <string name="invalid_username">Not a valid username</string>
     <string name="invalid_password">Password must be >5 characters</string>
     <string name="login_failed">"Login failed"</string>
+    <string name="apps_version">"PTPN 2 - Versi 12.2"</string>
 
     <string-array name="jenis_ijin">
         <item></item>
         <item>H</item>
+        <item>HT</item>
         <item>s</item>
         <item>c</item>
         <item>p1</item>
@@ -26,7 +28,8 @@
 
     <string-array name="jenis_ijin_lengkap">
         <item>- Pilih Jenis Ijin -</item>
-        <item>Hadir</item>
+        <item>Hadir (Panen)</item>
+        <item>Hadir (Tunasan)</item>
         <item>Sakit</item>
         <item>Cuti</item>
         <item>Ijin (P1)</item>

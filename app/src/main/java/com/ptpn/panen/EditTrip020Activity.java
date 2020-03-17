@@ -75,9 +75,10 @@ public class EditTrip020Activity extends AppCompatActivity {
         txtJlhBrondolan.setText(dataTrip.get("jlh_brondolan"));
         txtNoSPTBS.setText(dataTrip.get("sptbs"));
         txtNoPolisi.setText(dataTrip.get("no_polisi"));
-
-
-
+        txtJlhBrondolan.setFocusable(false);
+        txtNoSPTBS.setFocusable(false);
+        txtNoPolisi.setFocusable(false);
+        
         btnHapusSptbs = findViewById(R.id.btnHapusSptbs);
         btnHapusSptbs.setOnClickListener(new View.OnClickListener() {
             @Override
