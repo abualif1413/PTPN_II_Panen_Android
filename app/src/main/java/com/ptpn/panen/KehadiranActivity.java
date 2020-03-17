@@ -68,12 +68,12 @@ public class KehadiranActivity extends AppCompatActivity {
                 String idPekerja = String.valueOf(hadir.getIdPekerja());
                 String tanggal = tglSekarang;
 
-                if(hadir.getStatusKehadiran().equalsIgnoreCase("")) {
+                //if(hadir.getStatusKehadiran().equalsIgnoreCase("")) {
                     Intent intentDetail = new Intent(KehadiranActivity.this, TidakHadirActivity.class);
                     intentDetail.putExtra("ID_PEKERJA", idPekerja);
                     intentDetail.putExtra("TANGGAL", tanggal);
                     startActivity(intentDetail);
-                }
+                //}
             }
         });
     }

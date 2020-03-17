@@ -1763,7 +1763,7 @@ public class SQLiteHandler extends SQLiteOpenHelper {
 
 
                 String SQL_DETAIL = "SELECT " +
-                        "trip.id, trip.id_trip, trip.id_blok, trip.jumlah_janjang, trip.jumlah_restan " +
+                        "trip.id, trip.id_trip, trip.id_blok, trip.jumlah_janjang, trip.jumlah_restan, trip.tgl_restan " +
                         "FROM tbl_trip_020_detail trip " +
                         "WHERE trip.id_trip = '" + cursor.getInt(0) + "'";
 
@@ -1778,6 +1778,7 @@ public class SQLiteHandler extends SQLiteOpenHelper {
                         tempdetail.setId_blok(cursor_detail.getInt(2));
                         tempdetail.setJumlah_janjang(cursor_detail.getDouble(3));
                         tempdetail.setJumlah_restan(cursor_detail.getDouble(4));
+                        tempdetail.setTgl_restan(cursor_detail.getString(5));
 
                         trip020Details.add(tempdetail);
                     } while (cursor_detail.moveToNext());

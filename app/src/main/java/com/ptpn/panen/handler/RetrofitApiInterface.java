@@ -92,7 +92,7 @@ public interface RetrofitApiInterface {
             @Field("device") String device
     );
 
-    @POST("api/Trip020")
+    @POST("api/Trip020_01")
     @FormUrlEncoded
     Call<JsonPostUmum> getPostTrip020(
             @Field("data") String data

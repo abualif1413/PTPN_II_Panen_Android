@@ -6,6 +6,7 @@ public class Trip020Detail {
     public int id_blok;
     public double jumlah_janjang;
     public double jumlah_restan;
+    public String tgl_restan;
 
     public int getId() {
         return id;
@@ -45,5 +46,13 @@ public class Trip020Detail {
 
     public void setJumlah_restan(double jumlah_restan) {
         this.jumlah_restan = jumlah_restan;
+    }
+
+    public String getTgl_restan() {
+        return tgl_restan;
+    }
+
+    public void setTgl_restan(String tgl_restan) {
+        this.tgl_restan = tgl_restan;
     }
 }
