@@ -252,7 +252,7 @@ public class ProsesPanen020Activity extends AppCompatActivity {
             if(pairedDevice.size()>0){
                 for(BluetoothDevice pairedDev:pairedDevice){
                     Log.w("PanenBT", "Name : " + pairedDev.getName());
-                    if(pairedDev.getName().equals("BlueTooth Printer")) {
+                    if(pairedDev.getName().equals("RPP02N")) {
                         bluetoothDevice = pairedDev;
                     }
                 }
@@ -403,6 +403,11 @@ public class ProsesPanen020Activity extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
+        try {
+            disconnectBT();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
         Intent intent = new Intent(ProsesPanen020Activity.this, PanenActivity.class);
         startActivity(intent);
     }

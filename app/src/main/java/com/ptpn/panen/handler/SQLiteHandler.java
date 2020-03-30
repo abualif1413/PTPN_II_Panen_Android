@@ -768,6 +768,8 @@ public class SQLiteHandler extends SQLiteOpenHelper {
     }
 
     public List<ListViewAdapterKehadiranPekerja> getListViewAdapterKehadiranPekerja(String tanggal) {
+        Mandor mandor = getDataMandorAsPreference();
+
         List<ListViewAdapterKehadiranPekerja> lstKehadiranPkerja = new ArrayList<ListViewAdapterKehadiranPekerja>();
         final String SQL = "SELECT " +
                 "COALESCE(abs.id, 0) AS id, pemanen.id AS id_pemanen, pemanen.nama_pemanen, COALESCE(abs.kehadiran, '') AS kehadiran, " +
@@ -777,6 +779,8 @@ public class SQLiteHandler extends SQLiteOpenHelper {
                 "LEFT JOIN tbl_absen abs ON pemanen.barcode = abs.id_absen AND abs.tanggal = '" + tanggal + "' " +
                 "LEFT JOIN tbl_upload_info_absen upl ON abs.id_absen = upl.barcode AND abs.tanggal = upl.tanggal " +
                 "INNER JOIN preference_afdeling pref ON pemanen.id_afdeling = pref.id_afdeling " +
+                "WHERE " +
+                "pemanen.id_mandor = '" + mandor.getToken() + "' " +
                 "ORDER BY " +
                 "pemanen.nama_pemanen ASC";
         SQLiteDatabase db = this.getReadableDatabase();
@@ -914,6 +918,8 @@ public class SQLiteHandler extends SQLiteOpenHelper {
         ListViewAdapterKebunAfdeling dataAfdeling = getAfdelingPreference();
         int id_afdeling = dataAfdeling.getId();
 
+        KeraniKcs kcs = getDataKeraniKcsAsPreference();
+
         final String SQL = "SELECT\n" +
                 "	pemanen.id AS id_pemanen, coalesce(panen.id, 0) AS id_panen,\n" +
                 "	pemanen.nama_pemanen,\n" +
@@ -931,7 +937,7 @@ public class SQLiteHandler extends SQLiteOpenHelper {
                 "   LEFT JOIN tbl_alat alat ON panen.id_alat = alat.id\n" +
                 "   LEFT JOIN tbl_upload_info_panen upl ON panen.id_pemanen = upl.id_pemanen AND panen.tanggal = upl.tanggal " +
                 "WHERE\n" +
-                "	pemanen.id_afdeling = '" + id_afdeling + "'\n" +
+                "	pemanen.id_kerani_kcs = '" + kcs.getToken() + "'\n" +
                 "ORDER BY\n" +
                 "	pemanen.nama_pemanen ASC, panen.id ASC";
 

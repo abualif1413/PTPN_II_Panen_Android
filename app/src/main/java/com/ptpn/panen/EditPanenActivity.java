@@ -188,7 +188,7 @@ public class EditPanenActivity extends AppCompatActivity {
             if(pairedDevice.size()>0){
                 for(BluetoothDevice pairedDev:pairedDevice){
                     Log.w("PanenBT", "Name : " + pairedDev.getName());
-                    if(pairedDev.getName().equals("BlueTooth Printer")) {
+                    if(pairedDev.getName().equals("RPP02N")) {
                         bluetoothDevice = pairedDev;
                     }
                 }

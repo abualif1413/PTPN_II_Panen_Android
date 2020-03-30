@@ -10,7 +10,7 @@
     <string name="invalid_username">Not a valid username</string>
     <string name="invalid_password">Password must be >5 characters</string>
     <string name="login_failed">"Login failed"</string>
-    <string name="apps_version">"PTPN 2 - Versi 12.2"</string>
+    <string name="apps_version">"PTPN 2 - Versi 13.1"</string>
 
     <string-array name="jenis_ijin">
         <item></item>
