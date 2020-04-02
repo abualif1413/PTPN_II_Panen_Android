@@ -4,6 +4,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.database.sqlite.SQLiteStatement;
 import android.util.Log;
 
 import com.ptpn.panen.Panen;
@@ -348,11 +349,13 @@ public class SQLiteHandler extends SQLiteOpenHelper {
                 ") VALUES(" +
                 "'" + pemanen.getId() + "', '" + pemanen.getIdKeraniAskep() + "', '" + pemanen.getIdKeraniKcs() + "'," +
                 "'" + pemanen.getIdMandor() + "', '" + pemanen.getIdKebun() + "', '" + pemanen.getIdAfdeling() + "'," +
-                "'" + pemanen.getNamaPemanen() + "', '" + pemanen.getPhoto() + "', '" + pemanen.getBarcode() + "'," +
+                "'" + pemanen.getNamaPemanen().replace('\'', ' ') + "', '" + pemanen.getPhoto() + "', '" + pemanen.getBarcode() + "'," +
                 "'" + pemanen.getImgBarcode() + "', '" + pemanen.getKeterangan() + "'" +
                 ")";
         SQLiteDatabase db = this.getReadableDatabase();
-        db.execSQL(SQL);
+        SQLiteStatement sqLiteStatement = db.compileStatement(SQL);
+        sqLiteStatement.executeInsert();
+        sqLiteStatement.close();
     }
 
     public Pemanen getPemanen(int idPemanen) {
